@@ -1,0 +1,16 @@
+---
+- name: Generate the client keys
+  shell: |
+    umask 077
+    wg genkey | tee client-private.key | wg pubkey > client-public.key
+  args:
+    chdir: /etc/wireguard
+    creates: /etc/wireguard/client-public.key
+
+- name: Read the client private key
+  command: "cat /etc/wireguard/client-private.key"
+  register: client_private_key
+
+- name: Read the client public key
+  command: "cat /etc/wireguard/client-public.key"
+  register: client_public_key

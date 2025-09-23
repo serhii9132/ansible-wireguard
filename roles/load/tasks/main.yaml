@@ -1,0 +1,23 @@
+---
+- name: Prepare environment variables
+  ansible.builtin.set_fact:
+    wireguard_server_ip: '{{ lookup("env", "WIREGUARD_SERVER_IP") }}'
+    wireguard_server_port: '{{ lookup("env", "WIREGUARD_SERVER_PORT") }}'
+    wireguard_interface: '{{ lookup("env", "WIREGUARD_INTERFACE") }}'
+    dns: '{{ lookup("env", "DNS") }}'
+
+# - name: Test print1
+#   ansible.builtin.debug:
+#     var: wireguard_server_ip
+
+# - name: Test print2
+#   ansible.builtin.debug:
+#     var: wireguard_server_port
+
+# - name: Test print2
+#   ansible.builtin.debug:
+#     var: dns
+
+# - name: Test print2
+#   ansible.builtin.debug:
+#     var: ansible_default_ipv4.address

@@ -1,0 +1,27 @@
+---
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- ansible.builtin.import_tasks: server.yaml
+- ansible.builtin.import_tasks: client.yaml
+
+- name: Generate server configuration 
+  ansible.builtin.template:
+    src: server.conf.j2
+    dest: /etc/wireguard/{{ wireguard_interface }}.conf
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Generate client configuration 
+  ansible.builtin.template:
+    src: client.conf.j2
+    dest: /etc/wireguard/client.conf
+    owner: root
+    group: root
+    mode: '644'

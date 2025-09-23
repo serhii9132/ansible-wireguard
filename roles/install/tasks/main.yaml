@@ -1,0 +1,8 @@
+---
+- name: Install WireGuard and related packages
+  ansible.builtin.apt:
+    name: 
+    - wireguard
+    - iptables
+    update_cache: true
+    state: present
