@@ -1,0 +1,8 @@
+[Interface]
+Address = {{ wireguard_server_ip }}
+PrivateKey = {{ server_private_key.stdout }}
+ListenPort = {{ wireguard_server_port }}
+DNS = {{ main_dns }},{{ secondary_dns }}
+SaveConfig = true
+PostUp = iptables -A FORWARD -i {{ wireguard_interface }} -o {{ ansible_default_ipv4.interface }} -j ACCEPT; iptables -A FORWARD -i {{ ansible_default_ipv4.interface }} -o {{ wireguard_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+PostDown = iptables -D FORWARD -i {{ wireguard_interface }} -o {{ ansible_default_ipv4.interface }} -j ACCEPT; iptables -D FORWARD -i {{ ansible_default_ipv4.interface }} -o {{ wireguard_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE

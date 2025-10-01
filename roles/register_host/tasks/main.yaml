@@ -1,0 +1,8 @@
+---
+- name: Register host
+  no_log: true
+  ansible.builtin.add_host:
+    name: server-wg
+    ansible_host: '{{ lookup("env", "HOST_IP") }}'
+    ansible_port: '{{ lookup("env", "SSH_PORT") }}'
+    ansible_user: '{{ lookup("env", "SSH_USER") }}'

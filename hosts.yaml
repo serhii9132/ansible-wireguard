@@ -1,0 +1,10 @@
+all:
+  children:
+    local:
+      hosts:
+        localhost:
+          ansible_connection: local
+    vpn:
+      hosts:
+        server-wg:
+          # cdansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
