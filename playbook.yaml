@@ -1,0 +1,6 @@
+---
+- hosts: server-wg
+  gather_facts: yes
+  roles:
+   - install
+   - configure

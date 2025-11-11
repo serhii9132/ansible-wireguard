@@ -1,0 +1,8 @@
+---
+- name: Gatger package facts
+  no_log: true
+  ansible.builtin.package_facts:
+    manager: auto
+
+- ansible.builtin.import_tasks: apt.yaml
+  when: ansible_os_family == "Debian" and not ('wireguard' in ansible_facts.packages) 

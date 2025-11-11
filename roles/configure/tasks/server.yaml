@@ -1,0 +1,33 @@
+---
+- name: Generate the WireGuard private and public keys
+  ansible.builtin.shell: |
+    umask 077
+    wg genkey | tee server-private.key | wg pubkey > server-public.key
+  args:
+    chdir: /etc/wireguard
+    creates: /etc/wireguard/server-public.key
+  changed_when: false
+
+- name: Get the WireGuard private key
+  no_log: true
+  ansible.builtin.command: "cat /etc/wireguard/server-private.key"
+  register: server_private_key
+
+- name: Get the WireGuard public key
+  no_log: true
+  ansible.builtin.command: "cat /etc/wireguard/server-public.key"
+  register: server_public_key
+
+- name: Generate server configuration 
+  ansible.builtin.template:
+    src: server.conf.j2
+    dest: /etc/wireguard/{{ wireguard_interface }}.conf
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Start wireguard service and enable on boot
+  ansible.builtin.systemd:
+    name: "wg-quick@{{ wireguard_interface }}"
+    enabled: yes
+    state: started

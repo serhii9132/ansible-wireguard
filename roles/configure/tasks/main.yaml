@@ -1,0 +1,11 @@
+---
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- ansible.builtin.import_tasks: server.yaml
+- ansible.builtin.import_tasks: client.yaml

@@ -1,0 +1,10 @@
+[Interface]
+Address = {{ wireguard_server_ip | ansible.netcommon.ipaddr(client_count.stdout|int + 2) | ansible.netcommon.ipaddr('address') | ansible.netcommon.ipsubnet }}
+PrivateKey = {{ client_private_key.stdout }}
+DNS = {{ main_dns }}, {{ secondary_dns }}
+
+[Peer]
+PublicKey = {{ server_public_key.stdout }}
+Endpoint = {{ ansible_default_ipv4.address }}:{{ wireguard_server_port }}
+AllowedIPs = {{ wireguard_peers_allowed_ips }}
+PersistentKeepalive = 25
