@@ -1,8 +1,12 @@
 ---
 - name: Get the Wireguard peers count
-  no_log: true
+  # no_log: true
   ansible.builtin.shell:
-    cmd: wg show {{ wireguard_interface }} | grep peer | wc -l
+    cmd: |
+      set -o pipefail
+      wg show {{ wireguard_interface }} | grep --count peer || true
+  args:
+    executable: /bin/bash
   register: client_count
   changed_when: false
 
