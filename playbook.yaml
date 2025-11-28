@@ -1,6 +1,7 @@
 ---
-- hosts: server-wg
-  gather_facts: yes
+- name: Setup Wireguard
+  hosts: server-wg
+  gather_facts: true
   roles:
    - install
    - configure

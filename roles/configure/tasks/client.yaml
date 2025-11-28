@@ -1,72 +1,67 @@
 ---
-- name: Generate random string for the client filenames
+- name: Get the Wireguard peers count
+  no_log: true
+  ansible.builtin.shell:
+    cmd: wg show {{ wireguard_interface }} | grep peer | wc -l
+  register: client_count
+  changed_when: false
+
+- name: Get random ID for file names
   ansible.builtin.command: openssl rand -hex 8
-  register: filename
+  register: id_user_config
+  changed_when: false
 
-- name: Declaration of the client configs folder variable
+- name: Set configuration variables for the new client
   ansible.builtin.set_fact:
-    client_dir_config: "/etc/wireguard/clients/{{ filename.stdout }}"
+    client_dir_config: "{{ root_dir_client_conf }}/{{ id_user_config.stdout }}"
+    peer_ip: "{{ wireguard_server_ip | ansible.utils.nthhost(client_count.stdout | int + 2) | ansible.utils.ipsubnet }}"
 
-- name: Create directory for configs
+- name: Create sub-directory for client files
   ansible.builtin.file:
     path: "{{ client_dir_config }}"
     state: directory
-  
-- name: Generate the client keys
-  ansible.builtin.shell: |
-    umask 077
-    wg genkey | tee {{ filename.stdout }}-private.key | wg pubkey > {{ filename.stdout }}-public.key
-  args:
-    chdir: "{{ client_dir_config }}"
-    creates: "{{ client_dir_config }}/{{ filename.stdout }}-public.key"
-
-- name: Read the client private key
-  no_log: true
-  ansible.builtin.command: "cat {{ client_dir_config }}/{{ filename.stdout }}-private.key"
-  register: client_private_key
-
-- name: Read the client public key
-  no_log: true
-  ansible.builtin.command: "cat {{ client_dir_config }}/{{ filename.stdout }}-public.key"
-  register: client_public_key
-
-- name: Get the Wireguard client count
-  no_log: true
-  ansible.builtin.shell: wg show {{ wireguard_interface }} | grep peer | wc -l
-  register: client_count
-
-# - name: Test print6
-#   ansible.builtin.debug:
-#     msg: "{{ client_count.stdout }}"
-
-# - name: Test print7
-#   ansible.builtin.debug:
-#     msg: "{{ wireguard_server_ip | ansible.netcommon.ipaddr(client_count.stdout|int + 2) }}"
-
-# - name: Test print8
-#   ansible.builtin.debug:
-#     msg: "{{ wireguard_server_ip | ansible.netcommon.ipaddr(client_count.stdout|int + 2) | ansible.netcommon.ipaddr('address') }}"
-
-# - name: Test print9
-#   ansible.builtin.debug:
-#     msg: "{{ wireguard_server_ip | ansible.netcommon.ipaddr(client_count.stdout|int + 2) | ansible.netcommon.ipaddr('address') | ansible.netcommon.ipsubnet }}"
-
-- name: Add client as peer to server
-  no_log: true
-  ansible.builtin.shell: > 
-    wg set {{ wireguard_interface }} peer {{ client_public_key.stdout }} 
-    allowed-ips {{ wireguard_server_ip | ansible.netcommon.ipaddr(client_count.stdout|int + 2) | ansible.netcommon.ipaddr('address') | ansible.netcommon.ipsubnet }}
-
-- name: Generate client configuration 
-  ansible.builtin.template:
-    src: client.conf.j2
-    dest: "{{ client_dir_config }}/{{ filename.stdout }}.conf"
     owner: root
     group: root
     mode: '644'
 
-- name: Restart WireGuard service wg-quick@{{ WIREGUARD_INTERFACE }}
-  ansible.builtin.systemd:
-    name: "wg-quick@{{ wireguard_interface }}"
-    daemon_reload: yes
-    state: restarted
+- name: Generate the client keys
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      umask 077
+      wg genkey | tee {{ id_user_config.stdout }}-private.key | wg pubkey > {{ id_user_config.stdout }}-public.key
+  args:
+    chdir: "{{ client_dir_config }}"
+    creates: "{{ id_user_config.stdout }}-public.key"
+    executable: /bin/bash
+
+- name: Read the client private key
+  no_log: true
+  ansible.builtin.command: "cat {{ client_dir_config }}/{{ id_user_config.stdout }}-private.key"
+  register: client_private_key
+  changed_when: false
+
+- name: Read the client public key
+  no_log: true
+  ansible.builtin.command: "cat {{ client_dir_config }}/{{ id_user_config.stdout }}-public.key"
+  register: client_public_key
+  changed_when: false
+
+- name: Add client as peer to server
+  no_log: true
+  ansible.builtin.shell:
+    cmd: |
+      wg set {{ wireguard_interface }} peer {{ client_public_key.stdout }} allowed-ips {{ peer_ip }}
+      wg showconf {{ wireguard_interface }} > {{ client_dir_config }}/peer.conf
+  args:
+    chdir: "{{ client_dir_config }}"
+    creates: "{{ client_dir_config }}/peer.conf"
+    executable: /bin/bash
+
+- name: Generate client configuration
+  ansible.builtin.template:
+    src: client.conf.j2
+    dest: "{{ client_dir_config }}/{{ id_user_config.stdout }}.conf"
+    owner: root
+    group: root
+    mode: '644'

@@ -7,5 +7,8 @@
     state: present
     reload: true
 
-- ansible.builtin.import_tasks: server.yaml
-- ansible.builtin.import_tasks: client.yaml
+- name: Import server.yaml
+  ansible.builtin.import_tasks: server.yaml
+
+- name: Import client.yaml
+  ansible.builtin.import_tasks: client.yaml
