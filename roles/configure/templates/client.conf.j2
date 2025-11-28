@@ -1,7 +1,6 @@
 [Interface]
-Address = {{ wireguard_server_ip | ansible.netcommon.ipaddr(client_count.stdout|int + 2) | ansible.netcommon.ipaddr('address') | ansible.netcommon.ipsubnet }}
+Address = {{ peer_ip }}
 PrivateKey = {{ client_private_key.stdout }}
-DNS = {{ main_dns }}, {{ secondary_dns }}
 
 [Peer]
 PublicKey = {{ server_public_key.stdout }}
