@@ -2,7 +2,6 @@
 Address = {{ wireguard_server_ip }}
 PrivateKey = {{ server_private_key.stdout }}
 ListenPort = {{ wireguard_server_port }}
-DNS = {{ main_dns }}, {{ secondary_dns }}
 
 PostUp = find {{ root_dir_client_conf }} -type f -name "peer.conf" -exec wg addconf {{ wireguard_interface }} "{}" \;
 PostUp = iptables -A FORWARD -i {{ wireguard_interface }} -o {{ ansible_default_ipv4.interface }} -j ACCEPT

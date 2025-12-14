@@ -1,6 +1,9 @@
 [Interface]
 Address = {{ peer_ip }}
 PrivateKey = {{ client_private_key.stdout }}
+{% if dns %}
+DNS = {{ dns }}
+{% endif %}
 
 [Peer]
 PublicKey = {{ server_public_key.stdout }}

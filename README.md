@@ -1,6 +1,6 @@
 ## ansible-wireguard
 
-The repository contains an Ansible playbook for installing a WireGuard VPN server and generating the client configuration. The playbook generates a single client configuration at a time with a unique ID into the **/etc/wireguard/clients/${ID}** folder. The client’s IP address is dynamically calculated based on the number of active peers on the server.
+The repository contains an Ansible playbook for installing a WireGuard VPN server and generating the client configuration. The playbook generates a single client configuration at a time with a unique ID into the **/etc/wireguard/peers/${ID}** folder. The client’s IP address is dynamically calculated based on the number of active peers on the server.
 
 ### Tested on OS:
 - Debian 12
@@ -18,24 +18,6 @@ Playbook variables
   </tr>
 </thead>
 <tbody>
-  <tr>
-    <td>ansible_host</td>
-    <td>Specifies the resolvable name or IP of the host to connect to</td>
-    <td>str</td>
-    <td>''</td>
-  </tr>
-  <tr>
-    <td>ansible_port</td>
-    <td>The connection port number</td>
-    <td>int</td>
-    <td>''</td>
-  </tr>
-  <tr>
-    <td>ansible_user</td>
-    <td>The username to use when connecting (logging in) to the host</td>
-    <td>str</td>
-    <td>''</td>
-  </tr>
   <tr>
     <td>wireguard_server_ip</td>
     <td>The internal IP address and subnet (CIDR) assigned to the WireGuard server within the VPN tunnel</td>
@@ -61,14 +43,8 @@ Playbook variables
     <td>0.0.0.0/0</td>
   </tr>
   <tr>
-    <td>main_dns</td>
-    <td>Primary IP address of the DNS server assigned to connected WireGuard clients</td>
-    <td>str</td>
-    <td>''</td>
-  </tr>
-  <tr>
-    <td>secondary_dns</td>
-    <td>Secondary (backup) IP address of the DNS server assigned to connected WireGuard clients</td>
+    <td>dns</td>
+    <td>Address of the DNS server</td>
     <td>str</td>
     <td>''</td>
   </tr>
