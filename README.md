@@ -1,13 +1,21 @@
-## ansible-wireguard
+ansible-wireguard
+=================
 
 The repository contains an Ansible playbook for installing a WireGuard VPN server and generating the client configuration. The playbook generates a single client configuration at a time with a unique ID into the **/etc/wireguard/peers/${ID}** folder. The client’s IP address is dynamically calculated based on the number of active peers on the server.
 
-### Tested on OS:
-- Debian 12
-- Ubuntu 22.04
+Supported platfroms:
+- Debian 13 (Trixie)
+- Ubuntu 22.04 (Jammy Jellyfish)
+- Ubuntu 24.04 (Noble Numbat)
 
-Playbook variables
---------------------
+Requirements
+------------
+
+This role requires Ansible 2.19 or higher
+
+Role Variables
+--------------
+
 <table>
 <thead>
   <tr>
@@ -51,5 +59,21 @@ Playbook variables
 </tbody>
 </table>
 
-### Usage
-Run bootstrap.sh
+Dependencies
+------------
+
+None.
+
+Example Playbook
+----------------
+
+```yaml
+- hosts: servers
+  roles:
+    - serhii9132.wireguard
+```
+
+License
+-------
+
+MIT

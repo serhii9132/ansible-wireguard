@@ -1,8 +1,0 @@
----
-- name: Install WireGuard and related packages on Debian-based systems
-  ansible.builtin.apt:
-    name:
-      - "{{ item }}"
-    update_cache: true
-    state: present
-  loop: "{{ packages }}"

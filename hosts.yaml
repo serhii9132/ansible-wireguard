@@ -1,5 +1,0 @@
-all:
-  children:
-    vpn:
-      hosts:
-        server-wg:

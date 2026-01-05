@@ -1,3 +1,8 @@
+packages:
+  - wireguard
+  - iptables
+  - resolvconf
+
 root_dir_client_conf: /etc/wireguard/peers
 name_server_public_key: server-public.key
 name_server_private_key: server-private.key

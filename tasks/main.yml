@@ -1,0 +1,22 @@
+---
+- name: Install WireGuard and related packages
+  loop: "{{ packages }}"
+  ansible.builtin.apt:
+    name:
+      - "{{ item }}"
+    update_cache: true
+    state: present
+
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Import server.yaml
+  ansible.builtin.import_tasks: server.yaml
+
+- name: Import client.yaml
+  ansible.builtin.import_tasks: client.yaml
