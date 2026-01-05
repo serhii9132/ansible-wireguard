@@ -20,16 +20,17 @@ jobs:
         with:
           path: 'serhii9132.wireguard'
 
-      - name: Set up Python 3
-        uses: actions/setup-python@v2
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
+      - name: Install ansible-lint
+        run: pip install ansible-lint
+
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@main
-        with:
-          args: "--show-relpath"
-          working_directory: "serhii9132.wireguard"
+        run: |
+          ansible-lint --show-relpath .
 
   release:
     name: Release
@@ -52,5 +53,5 @@ jobs:
         run: |
           ansible-galaxy role import \
           --token ${{ secrets.GALAXY_API_KEY }} \
-          $(echo ${{ github.repository }} | cut -d/ -f1) \
-          $(echo ${{ github.repository }} | cut -d/ -f2)
+          ${{ github.repository_owner }} \ \
+          $(echo ${{ github.repository }} | cut -d '/' -f2)
