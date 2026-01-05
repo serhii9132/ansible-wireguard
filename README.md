@@ -16,48 +16,13 @@ This role requires Ansible 2.19 or higher
 Role Variables
 --------------
 
-<table>
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Comment</th>
-    <th>Type</th>
-    <th>Default Value</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>wireguard_server_ip</td>
-    <td>The internal IP address and subnet (CIDR) assigned to the WireGuard server within the VPN tunnel</td>
-    <td>str</td>
-    <td>10.0.0.1/24</td>
-  </tr>
-    <tr>
-    <td>wireguard_server_port</td>
-    <td>The UDP port number the WireGuard server listens on for incoming VPN connections from clients</td>
-    <td>int</td>
-    <td>50000</td>
-  </tr>
-  <tr>
-    <td>wireguard_interface</td>
-    <td>The specific name assigned to the virtual network interface (e.g., wg0, wg1) created by WireGuard on the server</td>
-    <td>str</td>
-    <td>wg0</td>
-  </tr>
-  <tr>
-    <td>wireguard_peers_allowed_ips</td>
-    <td>The list of IP addresses (or subnets) that the WireGuard server will route through the tunnel for connected clients. "0.0.0.0/0" means all internet traffic will be routed via the VPN</td>
-    <td>list</td>
-    <td>0.0.0.0/0</td>
-  </tr>
-  <tr>
-    <td>dns</td>
-    <td>Address of the DNS server</td>
-    <td>str</td>
-    <td>''</td>
-  </tr>
-</tbody>
-</table>
+```yaml
+wireguard_server_ip: "10.0.0.1/24"
+wireguard_server_port: 50000
+wireguard_interface: "wg0"
+wireguard_peers_allowed_ips: "0.0.0.0/0"
+dns: ""
+```
 
 Dependencies
 ------------
