@@ -1,6 +1,5 @@
 ---
 - name: Get the Wireguard peers count
-  no_log: true
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
