@@ -18,13 +18,48 @@ This role requires Ansible 2.19 or higher
 Role Variables
 --------------
 
-```yaml
-wireguard_server_ip: "10.0.0.1/24"
-wireguard_server_port: 50000
-wireguard_interface: "wg0"
-wireguard_peers_allowed_ips: "0.0.0.0/0"
-dns: ""
-```
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Comment</th>
+    <th>Type</th>
+    <th>Default Value</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>wireguard_server_ip</td>
+    <td>Internal VPN IPv4 address for the server with CIDR mask</td>
+    <td>str</td>
+    <td>"10.0.0.1/24"</td>
+  </tr>
+  <tr>
+    <td>wireguard_server_port</td>
+    <td>Public UDP port where WireGuard listens for incoming connections</td>
+    <td>int</td>
+    <td>50000</td>
+  </tr>
+  <tr>
+    <td>wireguard_interface</td>
+    <td>Name of the network interface to create on the server</td>
+    <td>str</td>
+    <td>"wg0"</td>
+  </tr>
+  <tr>
+    <td>wireguard_peers_allowed_ips</td>
+    <td>Subnets to route through the VPN on the client side. Set to 0.0.0.0/0 to route all traffic </td>
+    <td>str</td>
+    <td>"0.0.0.0/0"</td>
+  </tr>
+  <tr>
+    <td>wireguard_dns</td>
+    <td>Custom DNS servers to push to clients</td>
+    <td>str</td>
+    <td>""</td>
+  </tr>
+</tbody>
+</table>
 
 Dependencies
 ------------
