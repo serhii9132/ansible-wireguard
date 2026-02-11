@@ -1,9 +1,9 @@
 [Interface]
 Address = {{ wireguard_server_ip }}
-PrivateKey = {{ server_private_key.stdout }}
+PrivateKey = {{ __wireguard_server_private_key.stdout }}
 ListenPort = {{ wireguard_server_port }}
 
-PostUp = find {{ root_dir_client_conf }} -type f -name "peer.conf" -exec wg addconf {{ wireguard_interface }} "{}" \;
+PostUp = find {{ __wireguard_root_dir_client_conf }} -type f -name "{{ __wireguard_name_peer_config }}" -exec wg addconf {{ wireguard_interface }} "{}" \;
 PostUp = iptables -A FORWARD -i {{ wireguard_interface }} -o {{ ansible_default_ipv4.interface }} -j ACCEPT
 PostUp = iptables -A FORWARD -i {{ ansible_default_ipv4.interface }} -o {{ wireguard_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
 PostUp = iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE

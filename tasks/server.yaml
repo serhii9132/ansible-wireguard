@@ -4,22 +4,22 @@
     cmd: |
       set -o pipefail
       umask 077
-      wg genkey | tee {{ name_server_private_key }} | wg pubkey > {{ name_server_public_key }}
+      wg genkey | tee {{ __wireguard_name_server_private_key }} | wg pubkey > {{ __wireguard_name_server_public_key }}
   args:
     chdir: /etc/wireguard
-    creates: "{{ name_server_public_key }}"
+    creates: "{{ __wireguard_name_server_public_key }}"
     executable: /bin/bash
 
 - name: Get the WireGuard private key
   no_log: true
-  ansible.builtin.command: "cat /etc/wireguard/{{ name_server_private_key }}"
-  register: server_private_key
+  ansible.builtin.command: "cat /etc/wireguard/{{ __wireguard_name_server_private_key }}"
+  register: __wireguard_server_private_key
   changed_when: false
 
 - name: Get the WireGuard public key
   no_log: true
-  ansible.builtin.command: "cat /etc/wireguard/{{ name_server_public_key }}"
-  register: server_public_key
+  ansible.builtin.command: "cat /etc/wireguard/{{ __wireguard_name_server_public_key }}"
+  register: __wireguard_server_public_key
   changed_when: false
 
 - name: Generate server configuration
@@ -30,9 +30,9 @@
     group: root
     mode: '644'
 
-- name: Create {{ root_dir_client_conf }}
+- name: Create {{ __wireguard_root_dir_client_conf }}
   ansible.builtin.file:
-    path: "{{ root_dir_client_conf }}"
+    path: "{{ __wireguard_root_dir_client_conf }}"
     state: directory
     owner: root
     group: root

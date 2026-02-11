@@ -1,6 +1,6 @@
 ---
 - name: Install WireGuard and related packages
-  loop: "{{ packages }}"
+  loop: "{{ __wireguard_packages }}"
   ansible.builtin.apt:
     name:
       - "{{ item }}"

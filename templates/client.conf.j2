@@ -1,12 +1,12 @@
 [Interface]
-Address = {{ peer_ip }}
-PrivateKey = {{ client_private_key.stdout }}
-{% if dns %}
-DNS = {{ dns }}
+Address = {{ __wireguard_peer_ip }}
+PrivateKey = {{ __wireguard_client_private_key.stdout }}
+{% if wireguard_dns %}
+DNS = {{ wireguard_dns }}
 {% endif %}
 
 [Peer]
-PublicKey = {{ server_public_key.stdout }}
+PublicKey = {{ __wireguard_server_public_key.stdout }}
 Endpoint = {{ ansible_default_ipv4.address }}:{{ wireguard_server_port }}
 AllowedIPs = {{ wireguard_peers_allowed_ips }}
 PersistentKeepalive = 25
