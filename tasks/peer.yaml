@@ -1,0 +1,75 @@
+---
+- name: Set configuration variables for the new peers
+  ansible.builtin.set_fact:
+    __peers_configuration: "{{ __peers_configuration | default([]) + [__current_peer] }}"
+  loop: "{{ wireguard_peers }}"
+  loop_control:
+    index_var: idx
+  vars:
+    __current_peer:
+      id: "{{ item }}"
+      ip: "{{ wireguard_server_ip | ansible.utils.nthhost(idx | int + 2) | ansible.utils.ipsubnet }}"
+      config_path: "{{ __wireguard_root_dir_peer_conf }}/{{ item }}"
+
+- name: Create sub-directory for peers files
+  ansible.builtin.file:
+    path: "{{ item.config_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '644'
+  loop: "{{ __peers_configuration }}"
+
+- name: Generate the peers keys
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      umask 077
+      wg genkey | tee {{ __wireguard_name_peer_private_key }} | wg pubkey > {{ __wireguard_name_peer_public_key }}
+  args:
+    chdir: "{{ item.config_path }}"
+    creates: "{{ __wireguard_name_peer_public_key }}"
+    executable: /bin/bash
+  loop: "{{ __peers_configuration }}"
+
+- name: Read the peer private keys
+  no_log: true
+  ansible.builtin.command: "cat {{ item.config_path }}/{{ __wireguard_name_peer_private_key }}"
+  register: __wireguard_peer_private_keys
+  loop: "{{ __peers_configuration }}"
+  changed_when: false
+
+- name: Read the peer public keys
+  no_log: true
+  ansible.builtin.command: "cat {{ item.config_path }}/{{ __wireguard_name_peer_public_key }}"
+  register: __wireguard_peer_public_keys
+  loop: "{{ __peers_configuration }}"
+  changed_when: false
+
+- name: Apply peer.conf from template
+  ansible.builtin.template:
+    src: peer.conf.j2
+    dest: "{{ item.config_path }}/{{ __wireguard_name_peer_config }}"
+    owner: root
+    group: root
+    mode: '644'
+  loop: "{{ __peers_configuration }}"
+  loop_control:
+    index_var: idx
+
+- name: Apply internal.conf from template
+  ansible.builtin.template:
+    src: internal.conf.j2
+    dest: "{{ item.config_path }}/{{ __wireguard_name_internal_config }}"
+    owner: root
+    group: root
+    mode: '644'
+  loop: "{{ __peers_configuration }}"
+  loop_control:
+    index_var: idx
+
+- name: Start wireguard service and enable on boot
+  ansible.builtin.systemd:
+    name: "wg-quick@{{ __wireguard_interface }}"
+    enabled: true
+    state: started

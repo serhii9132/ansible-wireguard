@@ -1,5 +1,5 @@
 wireguard_server_ip: "10.0.0.1/24"
 wireguard_server_port: 50000
-wireguard_interface: "wg0"
 wireguard_peers_allowed_ips: "0.0.0.0/0"
 wireguard_dns: ""
+wireguard_peers: []

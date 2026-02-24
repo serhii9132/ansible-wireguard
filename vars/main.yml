@@ -2,8 +2,13 @@ __wireguard_packages:
   - wireguard
   - iptables
 
-__wireguard_root_dir_client_conf: /etc/wireguard/peers
+__wireguard_interface: "wg0"
+
+__wireguard_root_dir_peer_conf: /etc/wireguard/peers
 __wireguard_name_server_public_key: server-public.key
 __wireguard_name_server_private_key: server-private.key
 
 __wireguard_name_peer_config: peer.conf
+__wireguard_name_internal_config: internal.conf
+__wireguard_name_peer_private_key: private.key
+__wireguard_name_peer_public_key: public.key

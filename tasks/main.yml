@@ -1,9 +1,7 @@
 ---
 - name: Install WireGuard and related packages
-  loop: "{{ __wireguard_packages }}"
   ansible.builtin.apt:
-    name:
-      - "{{ item }}"
+    name: "{{ __wireguard_packages }}"
     update_cache: true
     state: present
 
@@ -18,5 +16,6 @@
 - name: Import server.yaml
   ansible.builtin.import_tasks: server.yaml
 
-- name: Import client.yaml
-  ansible.builtin.import_tasks: client.yaml
+- name: Import peer.yaml
+  ansible.builtin.import_tasks: peer.yaml
+  when: wireguard_peers | length > 0
