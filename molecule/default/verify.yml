@@ -1,0 +1,34 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Populate service facts
+      ansible.builtin.service_facts:
+
+    - name: Check if the Wireguard service is running
+      ansible.builtin.assert:
+        that:
+          - "'wg-quick@wg0.service' in ansible_facts.services"
+          - "ansible_facts.services['wg-quick@wg0.service'].status == 'active'"
+        fail_msg: "Service wg-quick@wg0.service is not running"
+        success_msg: "Service wg-quick@wg0.service is running"
+
+    - name: Load role variables
+      ansible.builtin.include_vars:
+        dir: "../../vars"
+
+    - name: Сheck the WireGuard interface status
+      ansible.builtin.command:
+        cmd: "wg show {{ __wireguard_interface }}"
+      register: __wg_show_output
+      changed_when: false
+
+    - name: Verify output
+      ansible.builtin.assert:
+        that:
+          - "'public key' in __wg_show_output.stdout"
+          - "'listening port' in __wg_show_output.stdout"
+        fail_msg: >-
+          WireGuard interface wg0 is missing public key or listening port!
+          Output was: {{ __wg_show_output.stdout }}
+        success_msg: "WireGuard interface wg0 is fully configured and active."

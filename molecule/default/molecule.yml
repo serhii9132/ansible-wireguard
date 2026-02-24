@@ -1,0 +1,39 @@
+---
+driver:
+  name: molecule-proxmox
+  options:
+    proxmox_secrets: $HOME/.molecule-proxmox/proxmox-secrets.yml
+    full: true
+
+platforms:
+  - name: molecule-debian-13
+    newid: 1000
+    template_name: debian-13-tmp
+    ipconfig:
+      ipconfig0: 'ip=192.168.64.150/24,gw=192.168.64.2'
+  - name: molecule-ubuntu-22.04
+    newid: 1002
+    template_name: ubuntu-22.04-tmp
+    ipconfig:
+      ipconfig0: 'ip=192.168.64.152/24,gw=192.168.64.2'
+  - name: molecule-ubuntu-24.04
+    newid: 1003
+    template_name: ubuntu-24.04-tmp
+    ipconfig:
+      ipconfig0: 'ip=192.168.64.153/24,gw=192.168.64.2'
+
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        wireguard_server_ip: "10.10.0.1/24"
+        wireguard_server_port: 50500
+        wireguard_dns: "8.8.8.8"
+        wireguard_peers:
+          - "user1"
+          - "user2"
+  env:
+    ANSIBLE_VERBOSITY: 3
+  lint:
+    name: "ansible-lint"
