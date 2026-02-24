@@ -1,7 +1,7 @@
 ansible-wireguard
 =================
 
-The repository contains an Ansible playbook for installing a WireGuard VPN server and generating the client configuration. The playbook generates a single client configuration at a time with a unique ID into the **/etc/wireguard/peers/${ID}** folder. The client’s IP address is dynamically calculated based on the number of active peers on the server.
+This WireGuard VPN server role supports multi-user access by generating multiple peers with unique IDs, storing all configuration files and keys in the /etc/wireguard/peers/${ID_PEER} directory.
 
 Supported platfroms:
 ```
@@ -41,12 +41,6 @@ Role Variables
     <td>50000</td>
   </tr>
   <tr>
-    <td>wireguard_interface</td>
-    <td>Name of the network interface to create on the server</td>
-    <td>str</td>
-    <td>"wg0"</td>
-  </tr>
-  <tr>
     <td>wireguard_peers_allowed_ips</td>
     <td>Subnets to route through the VPN on the client side. Set to 0.0.0.0/0 to route all traffic </td>
     <td>str</td>
@@ -57,6 +51,12 @@ Role Variables
     <td>Custom DNS servers to push to clients</td>
     <td>str</td>
     <td>""</td>
+  </tr>
+  <tr>
+    <td>wireguard_peers</td>
+    <td>An array of peer IDs</td>
+    <td>list</td>
+    <td>[]</td>
   </tr>
 </tbody>
 </table>
