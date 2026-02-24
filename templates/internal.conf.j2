@@ -1,0 +1,7 @@
+[Interface]
+ListenPort = {{ wireguard_server_port }}
+PrivateKey = {{ __wireguard_server_private_key.stdout }}
+
+[Peer]
+PublicKey = {{ __wireguard_peer_public_keys.results[idx].stdout }}
+AllowedIPs = {{ item.ip }}

@@ -1,6 +1,6 @@
 [Interface]
-Address = {{ __wireguard_peer_ip }}
-PrivateKey = {{ __wireguard_client_private_key.stdout }}
+Address = {{ item.ip }}
+PrivateKey = {{ __wireguard_peer_private_keys.results[idx].stdout }}
 {% if wireguard_dns %}
 DNS = {{ wireguard_dns }}
 {% endif %}
