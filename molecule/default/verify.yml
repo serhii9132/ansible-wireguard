@@ -1,6 +1,7 @@
 ---
 - name: Verify
   hosts: all
+  gather_facts: false
   tasks:
     - name: Populate service facts
       ansible.builtin.service_facts:
@@ -29,6 +30,6 @@
           - "'public key' in __wg_show_output.stdout"
           - "'listening port' in __wg_show_output.stdout"
         fail_msg: >-
-          WireGuard interface wg0 is missing public key or listening port!
+          WireGuard interface wg0 is missing public key or listening port
           Output was: {{ __wg_show_output.stdout }}
         success_msg: "WireGuard interface wg0 is fully configured and active."
