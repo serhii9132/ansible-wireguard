@@ -7,7 +7,9 @@ PostUp = find {{ __wireguard_root_dir_peer_conf }} -type f -name "{{ __wireguard
 PostUp = iptables -A FORWARD -i {{ __wireguard_interface }} -o {{ ansible_default_ipv4.interface }} -j ACCEPT
 PostUp = iptables -A FORWARD -i {{ ansible_default_ipv4.interface }} -o {{ __wireguard_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
 PostUp = iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+PostUp = iptables -A INPUT -p udp --dport {{ wireguard_server_port }} -j ACCEPT
 
 PostDown = iptables -D FORWARD -i {{ __wireguard_interface }} -o {{ ansible_default_ipv4.interface }} -j ACCEPT 
 PostDown = iptables -D FORWARD -i {{ ansible_default_ipv4.interface }} -o {{ __wireguard_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
 PostDown = iptables -t nat -D POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+PostDown = iptables -D INPUT -p udp --dport {{ wireguard_server_port }} -j ACCEPT
