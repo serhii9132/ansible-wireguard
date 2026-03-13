@@ -88,16 +88,13 @@
   ansible.builtin.file:
     path: "{{ item.0.config_path }}/{{ item.1 }}"
     state: absent
-  loop: "{{ __peers_configuration | product([
-    __wireguard_name_peer_private_key,
-    __wireguard_name_peer_public_key,
-    __wireguard_name_pre_shared_key]) | list }}"
+  loop: "{{ __peers_configuration | product([__wireguard_name_peer_private_key, __wireguard_name_peer_public_key, __wireguard_name_pre_shared_key]) | list }}"
 
 - name: Remove server key files
   ansible.builtin.file:
     state: absent
     path: "{{ item }}"
-  loop: 
+  loop:
     - "/etc/wireguard/{{ __wireguard_name_server_public_key }}"
     - "/etc/wireguard/{{ __wireguard_name_server_private_key }}"
 
