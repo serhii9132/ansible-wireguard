@@ -71,6 +71,7 @@ Example Playbook
 
 ```yaml
 - hosts: servers
+  gather_facts: true
   roles:
     - serhii9132.wireguard
 ```
