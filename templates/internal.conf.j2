@@ -5,3 +5,4 @@ PrivateKey = {{ __wireguard_server_private_key.stdout }}
 [Peer]
 PublicKey = {{ __wireguard_peer_public_keys.results[idx].stdout }}
 AllowedIPs = {{ item.ip }}
+PresharedKey = {{ __wireguard_peer_pre_shared_key.results[idx].stdout }}

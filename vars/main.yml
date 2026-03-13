@@ -12,3 +12,4 @@ __wireguard_name_peer_config: peer.conf
 __wireguard_name_internal_config: internal.conf
 __wireguard_name_peer_private_key: private.key
 __wireguard_name_peer_public_key: public.key
+__wireguard_name_pre_shared_key: psk
