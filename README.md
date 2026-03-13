@@ -5,6 +5,7 @@ This WireGuard VPN server role supports multi-user access by generating multiple
 
 Supported platfroms:
 ```
+- Debian 12 (Bookworm)
 - Debian 13 (Trixie)
 - Ubuntu 22.04 (Jammy Jellyfish)
 - Ubuntu 24.04 (Noble Numbat)
